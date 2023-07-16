@@ -22,7 +22,9 @@ public class RandomWordFromFile {
             Random rand = new Random();
             int randomIndex = rand.nextInt(words.size());
 
-            randomWord = words.get(randomIndex);
+            do {
+                randomWord = words.get(randomIndex);
+            } while (randomWord.length() < 4);
 
         } catch (IOException e) {
             System.err.format("Ошибка при чтении файла: %s%n", e);

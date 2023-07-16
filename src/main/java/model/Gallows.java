@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class Gallows {
 
     private String word;
-    private String guessWord;
-    private StringBuilder errors;
+    private String secretWord;
+    private StringBuilder wrongAttempts;
     private int errCount;
     private final Position[] positions;
     private final RandomWordFromFile randomWordFromFile;
@@ -14,7 +14,7 @@ public class Gallows {
     public Gallows() {
         randomWordFromFile = new RandomWordFromFile();
         word = randomWordFromFile.getWord().toLowerCase();
-        guessWord = "_".repeat(word.length());
+        secretWord = "_".repeat(word.length());
         positions = Position.values();
     }
 
@@ -28,15 +28,15 @@ public class Gallows {
 
     public void nextStep(Scanner in) {
         System.out.println(positions[errCount].getPositionName());
-        System.out.println("Слово: \u001B[32m" + guessWord + "\u001B[0m");
-        System.out.println("Ошибки (\u001B[31m" + errCount + "\u001B[0m) " + errors);
+        System.out.println("Слово: \u001B[32m" + secretWord + "\u001B[0m");
+        System.out.println("Ошибки (\u001B[31m" + errCount + "\u001B[0m) " + wrongAttempts);
         System.out.print("Буква: ");
 
         changeGuessWord(in.next().charAt(0));
     }
 
     public void changeGuessWord(char letter) {
-        char[] charGuessWord = guessWord.toCharArray();
+        char[] charGuessWord = secretWord.toCharArray();
         char[] charWord = word.toCharArray();
         boolean flag = false;
         for (int i = 0; i < charGuessWord.length; i++) {
@@ -46,17 +46,18 @@ public class Gallows {
             }
         }
         if (!flag) {
-            if (errors.indexOf(String.valueOf(letter)) < 0) {
-                errors.append(letter).append(" ");
+            if (wrongAttempts.indexOf(String.valueOf(letter)) < 0) {
+                wrongAttempts.append(letter).append(" ");
                 errCount++;
             }
         } else {
-            guessWord = new String(charGuessWord);
+            secretWord = new String(charGuessWord);
         }
     }
 
     public boolean areYouWin() {
-        if (!guessWord.contains("_")) {
+        if (!secretWord.contains("_")) {
+            System.out.println("Слово - " + word);
             System.out.println("\n\u001B[32mПОБЕДА!!!\u001B[0m\n");
             return true;
         }
@@ -66,7 +67,7 @@ public class Gallows {
     public boolean areYouLose() {
         if (errCount == 6) {
             System.out.println(positions[errCount].getPositionName());
-            System.out.println("Слово: \u001B[32m" + guessWord + "\u001B[0m");
+            System.out.println("Слово: \u001B[32m" + secretWord + "\u001B[0m");
             System.out.println("Ошибки (\u001B[31m" + errCount + "\u001B[0m)");
             System.out.println("Слово - " + word);
             System.out.println("\n\u001B[31mТЫ ПРОИГРАЛ!!!\u001B[0m\n");
@@ -77,8 +78,8 @@ public class Gallows {
 
     public void initNewRound() {
         word = randomWordFromFile.getWord().toLowerCase();
-        guessWord = "_".repeat(word.length());
-        errors = new StringBuilder();
+        secretWord = "_".repeat(word.length());
+        wrongAttempts = new StringBuilder();
         errCount = 0;
     }
 }

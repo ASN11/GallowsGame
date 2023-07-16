@@ -13,18 +13,15 @@ public class GameService {
 
     public void start() {
         Scanner in = new Scanner(System.in);
-        int res = gallows.startGame(in);
+        int input = gallows.startGame(in);
 
-        if (res == 1) {
+        if (input == 1) {
             gallows.initNewRound();
-            while (true) {
+            do {
                 gallows.nextStep(in);
-                if (gallows.areYouWin() || gallows.areYouLose()) {
-                    break;
-                }
-            }
+            } while (!gallows.areYouWin() && !gallows.areYouLose());
             start();
-        } else if (res == 2) {
+        } else if (input == 2) {
             System.exit(0);
         } else {
             System.out.println("Неверное значение");
